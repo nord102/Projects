@@ -1,0 +1,153 @@
+<!--
+	Project: 		Assignment 1 Hi-Lo in JavaScript and HTML
+	Student Name: 	Jordan Thompson
+	Date: 			September 27, 2013
+	Description:	This file contains the html code and javascript functions
+					that run and manage the Hi-Lo game.
+-->
+<html>
+
+<head>
+	<title>Hi-Lo Game</title>
+	<h1><center>Welcome to Jordan's Hi-Lo Game!</center></h1>
+
+	<center id ="welcome"></center>
+	<center id ="range"></center>
+
+	<script type="text/javascript">
+
+	<!-- Global Variables -->
+	var lowerRange = 1;
+	var upperRange;
+	var randomNumber;
+	var userName;
+	var validCheck = false;
+	var numGuesses = 0;
+	<!-- Used for user input validation -->
+	var alphaExp = /^[a-z A-Z]+$/;
+	var numExp = /^[0-9]+$/;
+
+	<!--Function:		setUp											-->
+
+	<!--Description:	This function gathers the users name and their	-->
+	<!--				chosen number to be the max range in the game.	-->
+	<!--				It also randomly generates the number they need	-->
+	<!--				to guess.										-->
+
+	function setUp()
+	{
+	var nameLine;
+	var rangeLine;
+
+		<!-- Prompts user for name and checks if it's valid -->
+		while(!validCheck)
+		{
+			userName=prompt("Please enter your name.","Generic Name");
+
+			if (userName==null || userName=="")
+			{
+			    alert("You must have a name!");
+			}
+			else if (!userName.match(alphaExp))
+			{
+			    alert("Your name must contain letters only!")
+			}
+			else
+			{
+				nameLine="Hello " + userName + ", Let's play!";
+				document.getElementById("welcome").innerHTML=nameLine;
+				validCheck = true;
+			}
+		}
+
+		validCheck = false;
+		<!-- Prompts user for the max number for the game and checks if it's valid -->
+		while(!validCheck)
+		{
+			upperRange=prompt("Please enter the max range.","10");
+
+			if (upperRange==null || upperRange=="")
+			{
+				alert("You must enter a max range!");
+			}
+			else if (!upperRange.match(numExp))
+			{
+				alert("Your max range must contain numbers only!");
+			}
+			else
+			{
+				rangeLine="Range: " + lowerRange + " - " + upperRange + "    Number of Guesses: " + numGuesses;
+				document.getElementById("range").innerHTML=rangeLine;
+				validCheck = true;
+			}
+		}
+
+		randomNumber=Math.floor((Math.random()*upperRange+1));
+	}
+
+	<!--Function:		checkGuess										-->
+
+	<!--Description:	This function validates and checks to see if	-->
+	<!--				the users guess	is higher, lower, or equal 		-->
+	<!--				to the randomly	generated number.				-->
+	<!--																-->
+	<!--Parameters:		userGuess:	Represents the users guess			-->
+
+	function checkGuess(userGuess)
+	{
+		numGuesses++;
+		<!-- Checks if guess is within the current range -->
+		if((userGuess >= lowerRange) && (userGuess <= parseInt(upperRange)))
+		{
+			<!-- Checks if guess is too high -->
+			if(userGuess > randomNumber)
+			{
+				alert("Your Guess was too High!");
+				upperRange = userGuess;
+				rangeLine="Range: " + lowerRange + " - " + upperRange + "    Number of Guesses: " + numGuesses;
+				document.getElementById("range").innerHTML=rangeLine;
+			}
+			<!-- Checks if guess is too low -->
+			else if(userGuess < randomNumber)
+			{
+				alert("Your Guess was too Low!");
+				lowerRange = userGuess;
+				rangeLine="Range: " + lowerRange + " - " + upperRange + "    Number of Guesses: " + numGuesses;
+				document.getElementById("range").innerHTML=rangeLine;
+			}
+			<!-- If the guess is correct, user is notified -->
+			<!-- and asked if they want to play again. -->
+			else
+			{
+				document.body.style.background = 'green';
+				alert("You Guessed the Correct Number in " + numGuesses + " Guesses!\nCongratulations!!!");
+
+				var choice=confirm("Play Again?","");
+				if(choice)
+				{
+					location.reload(true); <!-- Reloads the HTML page -->
+				}
+				else
+				{
+					close();<!-- Closes the HTML page -->
+				}
+			}
+		}
+		else
+		{
+			rangeLine="Range: " + lowerRange + " - " + upperRange + "    Number of Guesses: " + numGuesses;
+			document.getElementById("range").innerHTML=rangeLine;
+			alert("Out of Range, Try Again");
+		}
+	}
+
+	</script>
+</head>
+
+<body onload="setUp()">
+
+	<center>Enter your Guess:<input type="text" size="3" name="guess" id="userGuess"></input></center>
+	<center><input type="button" name="guess" value="Guess" onclick="checkGuess(document.getElementById('userGuess').value)"></center>
+
+</body>
+</html>

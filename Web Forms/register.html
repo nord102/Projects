@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<!--
+	Project: 		Assignment 2 Creating an HTML Form
+	Student Name: 	Jordan Thompson
+	Date: 			October 2, 2013
+	Description:	This file contains the html code and javascript functions
+					that run and manage the SET Registration page.
+-->
+
+<html>
+<head>
+    <title>SET Registration</title>
+    <h1><center>Welcome to the SET Registration Page</center></h1>
+
+    <script type="text/javascript">
+
+        //Function:     displayCheckBoxes
+        //
+        //Description:  This function displays the appropriate check boxes
+        //              depending on which radio button is checked.
+        function displayCheckBoxes() {
+
+            if (document.getElementById('FACULTY').checked) {
+
+                document.getElementById('checkBox1').innerHTML = '<input type="checkbox" name="faculty" value="Teach in Engineering">Teach in Engineering</input>'
+                document.getElementById('checkBox2').innerHTML = '<input type="checkbox" name="faculty" value="Drive Car to Work">Drive Car to Work</input>'
+                document.getElementById('checkBox3').innerHTML = '<input type="checkbox" name="faculty" value="Bring Lunch">Bring Lunch</input>'
+                document.getElementById('checkBox4').style.display = 'none'
+            }
+            else if (document.getElementById('STUDENT').checked) {
+
+                document.getElementById('checkBox1').innerHTML = '<input type="checkbox" name="student" value="Study in Information Technology">Study in Information Technology</input>'
+                document.getElementById('checkBox2').innerHTML = '<input type="checkbox" name="student" value="Own a Laptop Computer">Own a Laptop Computer</input>'
+                document.getElementById('checkBox3').innerHTML = '<input type="checkbox" name="student" value="Take Bus to School">Take Bus to School</input>'
+                document.getElementById('checkBox4').style.display = 'block'
+                document.getElementById('checkBox4').innerHTML = '<input type="checkbox" name="student" value="Own a Portable Music Player">Own a Portable Music Player</input>'
+            }            
+        }
+
+        //Function:     validateForm
+        //
+        //Description:  This function validates all of the user inputs
+        //              including name, street, city, province, postal
+        //              code, and faculty or student.
+        function validateForm() {
+        
+            var name = document.getElementById('NAME').value;
+            var street = document.getElementById('STREET').value;
+            var city = document.getElementById('CITY').value;
+            var province = document.getElementById('PROVINCE').value;
+            var postalCode = document.getElementById('POSTALCODE').value;
+
+            var errors = "";
+           
+            //Used for user input validation
+            var alphaExp = /^[a-z A-Z]+$/;
+            var postal7Exp = /[a-zA-Z][0-9][a-zA-Z](-| |)[0-9][a-zA-Z][0-9]/;
+            var postal6Exp = /[a-zA-Z][0-9][a-zA-Z][0-9][a-zA-Z][0-9]/;
+            var numExp = /^[0-9]+$/;
+            var streetExp = /^[a-z A-Z 0-9]+$/;
+
+            var retCode = true;
+            
+            //Check for valid Name
+            if (name == null || name == "") {               
+                errors += "You must have a name!\n";
+                document.getElementById('NAME').style.border = "3px solid red";
+                retCode = false;
+            }
+            else if (!name.match(alphaExp)) {
+                errors += "Your name must contain letters only!\n";
+                document.getElementById('NAME').style.border = "3px solid red";
+                retCode = false;
+            }
+            else {
+                document.getElementById('NAME').style.border = "";
+            }
+          
+            //Check for valid Street
+            if (street == null || street == "") {
+                errors +="You must have a street!\n";
+                document.getElementById('STREET').style.border = "3px solid red";
+                retCode = false;
+            }
+            else if (!(street.match(streetExp))) {
+                errors += "Your street must contain letters and numbers only!\n";
+                document.getElementById('STREET').style.border = "3px solid red";
+                retCode = false;               
+            }
+            else {
+                document.getElementById('STREET').style.border = "";
+            }
+
+            //Check for valid City
+            if (city == null || city == "") {
+                errors += "You must have a city!\n";
+                document.getElementById('CITY').style.border = "3px solid red";
+                retCode = false;
+            }
+            else if (!city.match(alphaExp)) {
+                errors += "Your city must contain letters only!\n";
+                document.getElementById('CITY').style.border = "3px solid red";
+                retCode = false;
+            }
+            else {
+                document.getElementById('CITY').style.border = "";
+            }
+
+            //Check for valid Province
+            if (province == null || province == "") {
+                errors += "You must choose a province!\n";
+                document.getElementById('PROVINCE').style.border = "3px solid red";
+                retCode = false;
+            }
+            else {
+                document.getElementById('PROVINCE').style.border = "";
+            }
+            
+            //Check for valid Postal Code //Format A#A #A# or A#A#A#
+            if (postalCode == null || postalCode == "") {
+                errors += "You must have a postal code!\n";
+                document.getElementById('POSTALCODE').style.border = "3px solid red";
+                retCode = false;
+            }
+            else if (((postalCode.length == 7) && !(postal7Exp.test(postalCode))) || ((postalCode.length == 6) && !(postal6Exp.test(postalCode)))) {
+                errors += "Your postal code must be in the format of:\nA#A #A# or A#A#A#\nWhere '#' represents 0-9 and 'A' represents A-Z\n";
+                document.getElementById('POSTALCODE').style.border = "3px solid red";
+                retCode = false;
+            }
+            else {
+                document.getElementById('POSTALCODE').style.border = "";
+            }
+
+            //Check if Faculty or Student is Checked
+            if (!(document.getElementById('FACULTY').checked) && !(document.getElementById('STUDENT').checked)) {
+                errors +="You must be either a Faculty or a Student!\n";
+                retCode = false;
+            }
+
+            //Display Any errors of input
+            if (errors != "") {
+                alert(errors)
+            }
+            return retCode;
+        }
+    </script>
+</head>
+<body>
+    <form name="myForm" action="http://pc-00224d503c23/testRequest.asp" onsubmit="return validateForm()" method="get">
+        <div id="Table">
+        <table border="0" width="180%">            
+            <tr>
+                <td width="20%"align="right">Full Name:</td>
+                <td width="10%"align="left"><input type="text" size="25" name="name" id="NAME"></input></td>
+                <td align="left">Faculty<input type="radio" name ="person_type" id="FACULTY" onclick="displayCheckBoxes()"></input>Student<input type="radio"  name ="person_type" id="STUDENT" onclick="displayCheckBoxes()"></input></td>                
+            </tr>
+             <tr>
+                <td align="right">Street:</td>
+                <td align="left"><input type="text" size="25" name="street" id="STREET"></input></td>    
+                 <td id ="checkBox1"></td>            
+            </tr>
+             <tr>
+                <td align="right">City:</td>
+                <td align="left"><input type="text" size="25" name="city" id="CITY"></input></td>
+                <td id ="checkBox2"></td>
+            </tr>
+            <tr>
+                <td align="right">Province:</td>
+                <td align="left">
+                    <select name="province" id="PROVINCE">
+                        <option value=""> -----  Select Province -----</option>
+                        <option value="Alberta">                    Alberta </option>
+                        <option value="British Columbia">           British Columbia </option>
+                        <option value="Manitoba">                   Manitoba </option>
+                        <option value="New Brunswick">              New Brunswick </option>
+                        <option value="Newfoundland and Labrador">  Newfoundland and Labrador </option>
+                        <option value="Nova Scotia">                Nova Scotia </option>
+                        <option value="Nunavut">                    Nunavut </option>
+                        <option value="Ontario">                    Ontario </option>
+                        <option value="Prince Edward Island">       Prince Edward Island </option>
+                        <option value="Quebec">                     Quebec </option>
+                        <option value="Saskatchewan">               Saskatchewan </option>
+                        <option value="Northwest Territories">      Northwest Territories </option>
+                        <option value="Yukon">                      Yukon </option>
+                    </select>
+                </td>
+                <td id ="checkBox3"></td>
+            </tr>
+            <tr>
+                <td align="right">Postal Code:</td>
+                <td align="left"><input type="text" size="25" name="postalCode" id="POSTALCODE"></input></td>
+                <td id ="checkBox4"></td>
+            </tr>
+        </table>    
+        </div>
+        <center><input type="submit" style="width:300px; height:50px;" value="Submit"</input><input type="button" style="width:300px; height:50px;" value="Cancel" onclick="location.reload(true)"</input></center>           
+    </form>
+</body>
+</html>
